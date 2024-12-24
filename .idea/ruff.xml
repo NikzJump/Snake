@@ -2,5 +2,6 @@
 <project version="4">
   <component name="RuffConfigService">
     <option name="globalRuffExecutablePath" value="C:\Users\kiril\AppData\Local\Programs\Python\Python311\Scripts\ruff.exe" />
+    <option name="projectRuffExecutablePath" value="C:\PRG\снаке\venv\Scripts\ruff.exe" />
   </component>
 </project>
