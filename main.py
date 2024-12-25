@@ -1,6 +1,8 @@
 import pygame
 import random
+
 import hamilton_cycle
+import a_star
 
 alive = True
 direction = 0
@@ -13,7 +15,7 @@ Wsize = (720, 480)
 
 screen = pygame.display.set_mode(Wsize)
 
-Tside = 30
+Tside = 15
 Msize = Wsize[0] // Tside, Wsize[1] // Tside
 
 start_pos = 0, 0
@@ -25,7 +27,9 @@ run = True
 
 
 while run:
-    dirs = hamilton_cycle.cycle(Msize, len(snake))
+    path_ = a_star.a_star(Msize, snake[0], apple, snake)
+    dirs = a_star.convert_to_dirs(path_)
+
     for dir in dirs:
         clock.tick(100)
         screen.fill("black")
@@ -65,12 +69,15 @@ while run:
         if not (0 <= new_pos[0] < Msize[0] and 0 <= new_pos[1] < Msize[1]):
             alive = False
         else:
-            if len(snake) != len(set(snake)):
-                alive = False
+            # if len(snake) != len(set(snake)):
+            #     print("!!", new_pos)
+            #     print("!!", dir)
+            #     alive = False
             snake.insert(0, new_pos)
             if new_pos == apple:
                 apple = random.randint(0, Msize[0] - 1), random.randint(0, Msize[1] - 1)
                 if apple in snake:
+                    print("!!!!!")
                     apple = (
                         random.randint(0, Msize[0] - 1),
                         random.randint(0, Msize[1] - 1),
