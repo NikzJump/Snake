@@ -15,23 +15,20 @@ Wsize = (720, 480)
 
 screen = pygame.display.set_mode(Wsize)
 
-Tside = 15
+Tside = 10
 Msize = Wsize[0] // Tside, Wsize[1] // Tside
 
 start_pos = 0, 0
 
 snake = [start_pos]
 
-apple = random.randint(0, Msize[0] - 1), random.randint(0, Msize[1] - 1)
+apple = random.randint(0, Msize[0] -3), random.randint(0, Msize[1] - 3)
 run = True
 
-
+dirs = a_star.convert_to_dirs(a_star.a_star(Msize, snake[0], apple, snake, snake[0]))
 while run:
-    path_ = a_star.a_star(Msize, snake[0], apple, snake)
-    dirs = a_star.convert_to_dirs(path_)
-
     for dir in dirs:
-        clock.tick(100)
+        clock.tick(50)
         screen.fill("black")
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -69,24 +66,43 @@ while run:
         if not (0 <= new_pos[0] < Msize[0] and 0 <= new_pos[1] < Msize[1]):
             alive = False
         else:
-            # if len(snake) != len(set(snake)):
-            #     print("!!", new_pos)
-            #     print("!!", dir)
+            # if new_pos in snake:
             #     alive = False
+
             snake.insert(0, new_pos)
-            if new_pos == apple:
-                apple = random.randint(0, Msize[0] - 1), random.randint(0, Msize[1] - 1)
+            if snake[0] == apple:
+                apple = random.randint(0, Msize[0] - 3), random.randint(0, Msize[1] - 3)
                 if apple in snake:
-                    print("!!!!!")
                     apple = (
                         random.randint(0, Msize[0] - 1),
                         random.randint(0, Msize[1] - 1),
                     )
-                    continue
+                    while apple in snake:
+                        apple = (
+                            random.randint(0, Msize[0] - 1),
+                            random.randint(0, Msize[1] - 1),
+                        )
+
                 snake.append(new_pos)
+
+                path_ = a_star.a_star(Msize, snake[0], apple, snake, snake[0])
+                dirs2 = a_star.convert_to_dirs(path_)
+
+                if not dirs2:
+                    while not dirs2:
+                        apple = (
+                            random.randint(0, Msize[0] - 3),
+                            random.randint(0, Msize[1] - 3),
+                        )
+                        path_ = a_star.a_star(Msize, snake[0], apple, snake, snake[0])
+                        dirs2 = a_star.convert_to_dirs(path_)
+
+                dirs = dirs2
+
             snake.pop(-1)
             pygame.display.flip()
-        continue
+
+            new_pos = snake[0]
 
 #     if event.key == pygame.K_d and direction != 2:
 #         direction = 0

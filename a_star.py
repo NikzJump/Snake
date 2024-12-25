@@ -16,7 +16,7 @@ def calculate_H(node1, node2):
     return result
 
 
-def a_star(maze, start, end, obst):
+def a_star(maze, start, end, obst, head):
     start_node = Node(None, start)
     start_node.g = start_node.f = start_node.h = 0
     end_node = Node(None, end)
@@ -25,11 +25,16 @@ def a_star(maze, start, end, obst):
     ol = []
     cl = []
 
+    stop = 0
+
     directions = [(0, -1), (-1, 0), (-1, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (0, 1), (1, 0)]
 
     ol.append(start_node)
 
     while len(ol) > 0:
+        stop += 1
+
+        path_ = []
         current_node = ol[0]
         current_index = 0
 
@@ -41,8 +46,13 @@ def a_star(maze, start, end, obst):
         ol.pop(current_index)
         cl.append(current_node)
 
+        if stop >= 100:
+            return False
+
+        print("текущая", current_node.position)
+        print("конечная", end_node.position)
+        print("конечная 2", end)
         if current_node == end_node:
-            path_ = []
             current = current_node
 
             while current is not None:
@@ -85,6 +95,9 @@ def a_star(maze, start, end, obst):
 
 def convert_to_dirs(path):
     directions = []
+
+    if not path:
+        return False
 
     for index, item in enumerate(path):
         if index == len(path) - 1:
