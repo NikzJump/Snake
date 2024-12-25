@@ -52,6 +52,7 @@ def a_star(maze, start, end, obst, head):
         print("текущая", current_node.position)
         print("конечная", end_node.position)
         print("конечная 2", end)
+
         if current_node == end_node:
             current = current_node
 
