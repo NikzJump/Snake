@@ -11,7 +11,9 @@ class Node:
 
 
 def calculate_H(node1, node2):
-    result = ((node1.position[0] - node2.position[0]) ** 2 + (node1.position[1] - node2.position[1]) ** 2)
+    result = (node1.position[0] - node2.position[0]) ** 2 + (
+        node1.position[1] - node2.position[1]
+    ) ** 2
 
     return result
 
@@ -27,7 +29,17 @@ def a_star(maze, start, end, obst, head):
 
     stop = 0
 
-    directions = [(0, -1), (-1, 0), (-1, -1), (0, 1), (1, 1), (1, -1), (-1, 1), (0, 1), (1, 0)]
+    directions = [
+        (0, -1),
+        (-1, 0),
+        (-1, -1),
+        (0, 1),
+        (1, 1),
+        (1, -1),
+        (-1, 1),
+        (0, 1),
+        (1, 0),
+    ]
 
     ol.append(start_node)
 
@@ -49,11 +61,9 @@ def a_star(maze, start, end, obst, head):
         if stop >= 100:
             return False
 
-        print("текущая", current_node.position)
-        print("конечная", end_node.position)
-        print("конечная 2", end)
-
         if current_node == end_node:
+            print("текущая", current_node.position)
+
             current = current_node
 
             while current is not None:
@@ -65,11 +75,17 @@ def a_star(maze, start, end, obst, head):
         children = []
 
         for new_position in directions:
-            node_position = (current_node.position[0] + new_position[0],
-                             current_node.position[1] + new_position[1])
+            node_position = (
+                current_node.position[0] + new_position[0],
+                current_node.position[1] + new_position[1],
+            )
 
-            if (node_position[0] > maze[0] - 1 or node_position[0] < 0 or
-                    node_position[1] > maze[1] - 1 or node_position[1] < 0):
+            if (
+                node_position[0] > maze[0] - 1
+                or node_position[0] < 0
+                or node_position[1] > maze[1] - 1
+                or node_position[1] < 0
+            ):
                 continue
 
             if node_position in obst:
@@ -104,12 +120,12 @@ def convert_to_dirs(path):
         if index == len(path) - 1:
             return directions
 
-        if item[0] < path[index+1][0]:
+        if item[0] < path[index + 1][0]:
             directions.append(0)
-        if item[0] > path[index+1][0]:
+        if item[0] > path[index + 1][0]:
             directions.append(2)
 
-        if item[1] < path[index+1][1]:
+        if item[1] < path[index + 1][1]:
             directions.append(1)
-        if item[1] > path[index+1][1]:
+        if item[1] > path[index + 1][1]:
             directions.append(3)

@@ -22,31 +22,37 @@ start_pos = 0, 0
 
 snake = [start_pos]
 
-apple = random.randint(0, Msize[0] -3), random.randint(0, Msize[1] - 3)
+apple = random.randint(0, Msize[0] - 3), random.randint(0, Msize[1] - 3)
 run = True
 
 dirs = a_star.convert_to_dirs(a_star.a_star(Msize, snake[0], apple, snake, snake[0]))
 
 calculate_status = True
+color = "green"
 
 
-def error_calculate_dirs(local_calculate_status):
+def error_calculate_dirs(local_calculate_status, Msize):
     new_apple = None
+    stop_num = 0
     while not local_calculate_status:
+        stop_num += 1
         new_apple = (
             random.randint(0, Msize[0] - 3),
             random.randint(0, Msize[1] - 3),
         )
 
-        local_calculate_status = a_star.convert_to_dirs(a_star.a_star(Msize, snake[0], new_apple, snake, snake[0]))
+        local_calculate_status = a_star.convert_to_dirs(
+            a_star.a_star(Msize, snake[0], new_apple, snake, snake[0])
+        )
 
     return local_calculate_status, new_apple
 
 
 while run:
     for dir in dirs:
-        clock.tick(90)
+        clock.tick(100)
         screen.fill("black")
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -62,7 +68,7 @@ while run:
 
         [
             pygame.draw.rect(
-                screen, "green", (x * Tside, y * Tside, Tside - 1, Tside - 1)
+                screen, color, (x * Tside, y * Tside, Tside - 1, Tside - 1)
             )
             for x, y in snake
         ]
@@ -86,11 +92,13 @@ while run:
             snake.insert(0, new_pos)
             if snake[0] == apple:
                 apple = random.randint(0, Msize[0] - 3), random.randint(0, Msize[1] - 3)
+                print("Длина: ", len(snake))
                 if apple in snake:
                     apple = (
                         random.randint(0, Msize[0] - 1),
                         random.randint(0, Msize[1] - 1),
                     )
+
                     while apple in snake:
                         apple = (
                             random.randint(0, Msize[0] - 1),
@@ -99,10 +107,12 @@ while run:
 
                 snake.append(new_pos)
 
-                calculate_status = a_star.convert_to_dirs(a_star.a_star(Msize, snake[0], apple, snake, snake[0]))
+                calculate_status = a_star.convert_to_dirs(
+                    a_star.a_star(Msize, snake[0], apple, snake, snake[0])
+                )
 
                 if not calculate_status:
-                    error_result = error_calculate_dirs(calculate_status)
+                    error_result = error_calculate_dirs(calculate_status, Msize)
                     calculate_status = error_result[0]
                     apple = error_result[1]
 
